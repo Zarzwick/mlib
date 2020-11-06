@@ -415,6 +415,37 @@
      }                                                                        \
    }                                                                          \
                                                                               \
+   static inline void                                                         \
+   M_C(name, _increase_priority)(prioqueue_t p, type xold, type xnew)         \
+   {                                                                          \
+     /* This update assumes that the new position is further in the heap */   \
+     M_ASSERT (M_CALL_CMP(oplist, xold, xnew) > 0);                           \
+     /* First pass: search for an item EQUAL to x */                          \
+     size_t size = M_C(name, _array_size)(p->array);                          \
+     size_t i = 0;                                                            \
+     for(i = 0; i < size; i++) {                                              \
+       if (M_CALL_EQUAL(oplist, *M_C(name, _array_cget)(p->array, i), xold))  \
+         break;                                                               \
+     }                                                                        \
+     /* We shall have found the item */                                       \
+     M_ASSERT (i < size);                                                     \
+     /* Set the found item to the new element */                              \
+     M_C(name, _array_set_at) (p->array, i, xnew);                            \
+     /* Move back the updated element to its right position in the heap */    \
+     while (true) {                                                           \
+       size_t parent = M_C(name, _i_parent)(i);                               \
+       if (M_C(name, _i_cmp)(p, i, parent) < 0) {                             \
+         M_C(name, _array_swap_at)(p->array, i, parent) ;                     \
+         i = parent ;                                                         \
+         if (i == 0) {                                                        \
+           break ;                                                            \
+         }                                                                    \
+       } else {                                                               \
+         break ;                                                              \
+       }                                                                      \
+     }                                                                        \
+   }                                                                          \
+                                                                              \
    , /* No EQUAL */ )                                                         \
 
 

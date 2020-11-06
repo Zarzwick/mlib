@@ -3340,6 +3340,10 @@ Update the iterator 'it' to the previous element.
 
 Return a constant pointer to the referenced item.
 
+##### void name\_increase\_priority(name\_t queue, type xold, type xnew)
+
+Increase the priority (decrease the value) of xold.
+
 
 
 ### M-BUFFER
